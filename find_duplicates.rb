@@ -53,8 +53,8 @@ duplicates_hash.each do |file_to_keep, files_to_move|
   bash_script.write "# Duplicates of #{file_to_keep}\n"
   files_to_move.each do |file|
     sub_path = file[FOLDER_TO_CHECK.length+1..-1]
-    destFilePath = "#{TO_FOLDER}#{File::SEPARATOR}#{sub_path}"
-    bash_script.write "mv \"#{file}\" \"#{destFilePath}\"\n"
+    dest_file_path = "#{TO_FOLDER}#{File::SEPARATOR}#{sub_path}"
+    bash_script.write "mv \"#{file}\" \"#{dest_file_path}\"\n"
   end
   bash_script.write "\n"
 end
