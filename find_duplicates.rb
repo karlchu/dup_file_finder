@@ -1,9 +1,9 @@
 require "digest/md5"
 
 # TODO: Take in the FOLDER_TO_CHECK by command line parameter
-#FOLDER_TO_CHECK = "/Volumes/Data/Picasa"
+FOLDER_TO_CHECK = "/Volumes/Data/Picasa"
 #FOLDER_TO_CHECK = "test_data"
-FOLDER_TO_CHECK = "/Users/kchu/dev/duplicate_finder/test_data"
+#FOLDER_TO_CHECK = "/Users/kchu/dev/duplicate_finder/test_data"
 # TODO: Take in the TO_FOLDER by command line parameter
 TO_FOLDER = "/Volumes/Data/picassa_duplicates"
 # TODO: Take in the SCRIPT_NAME by command line parameter
@@ -60,7 +60,7 @@ filesize_hash = index_file_size_in_dir(dir_glob_pattern)
 puts 'File sets that have the same size:'
 filesize_hash.values.each do |files_of_same_size|
   if files_of_same_size.size > 1
-    puts files_of_same_size.join(" <=> ")
+    puts "[ #{files_of_same_size.join("\n  ")}\n]"
   end
 end
 
