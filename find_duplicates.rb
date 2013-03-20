@@ -2,11 +2,9 @@ require "digest/md5"
 require_relative 'lib/duplicate_file_finder'
 
 # TODO: Take in the FOLDER_TO_CHECK by command line parameter
-#FOLDER_TO_CHECK = "/Volumes/Data/Picasa"
 FOLDER_TO_CHECK = "test_data"
-#FOLDER_TO_CHECK = "/Users/kchu/dev/duplicate_finder/test_data"
 # TODO: Take in the TO_FOLDER by command line parameter
-TO_FOLDER = "/Volumes/Data/picassa_duplicates"
+TO_FOLDER = "test_data_duplicates"
 # TODO: Take in the SCRIPT_NAME by command line parameter
 SCRIPT_NAME = "do-the-move.sh"
 
