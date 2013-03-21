@@ -1,6 +1,20 @@
+require "digest/md5"
+
 class DuplicateFileFinder
-  def find_and_create_shell_script(folder_to_check, script_name)
-    # TODO
+
+  # @return [Array] An array of arrays. Each array contains the filenames of the files
+  # that are the duplicate of each other
+  def find_duplicate_file_sets(folder_to_check)
+    filesize_hash = index_file_size_in_dir("#{folder_to_check}/**/*")
+
+    duplicate_file_set = []
+    filesize_hash.values.each do |files_of_same_size|
+      if files_of_same_size.size > 1
+        find_duplicate_files_by_digest = find_duplicate_files_by_digest(files_of_same_size)
+        duplicate_file_set.concat find_duplicate_files_by_digest
+      end
+    end
+    duplicate_file_set
   end
 
   # @return [Hash] A hash keyed by the file size. The value is an array of file names

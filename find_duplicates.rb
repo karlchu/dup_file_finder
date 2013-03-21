@@ -44,7 +44,7 @@ filesize_hash.values.each do |files_of_same_size|
   end
 end
 
-bash_script = File.new SCRIPT_NAME, "w"
+bash_script = File.new SCRIPT_NAME, 'w'
 
 bash_script.write "#!/bin/bash\n\n"
 duplicates_hash.each do |file_to_keep, files_to_move|
