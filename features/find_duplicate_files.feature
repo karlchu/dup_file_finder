@@ -16,6 +16,5 @@ Feature: Find duplicate files
       | file2.bin      | random       | 1024      |           |
     When I execute the duplicate file finder
     Then the result set should contain 1 file-set
-    And file-set 1 should contains the following
-      | file1.bin      |
-      | file1-copy.bin |
+    And the file-sets should be as follows
+      | file1.bin | file1-copy.bin |

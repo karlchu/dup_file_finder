@@ -10,38 +10,21 @@ SCRIPT_NAME = "do-the-move.sh"
 
 # TODO: Make this cross-platform? (i.e. care a bit more about Windows?)
 
-duplicate_file_finder = DuplicateFileFinder.new
-
-dir_glob_pattern = "#{FOLDER_TO_CHECK}/**/*"
-
 def compare_files(x, y)
   File.basename(x).length - File.basename(y).length
 end
 
-filesize_hash = duplicate_file_finder.index_file_size_in_dir(dir_glob_pattern)
 
-puts 'File sets that have the same size:'
-filesize_hash.values.each do |files_of_same_size|
-  if files_of_same_size.size > 1
-    puts "[ #{files_of_same_size.join("\n  ")}\n]"
-  end
-end
+duplicate_file_sets = DuplicateFileFinder.new.find_duplicate_file_sets(FOLDER_TO_CHECK)
 
+# Create a new hash that the key is the "original" file name. The values of the hash are arrays of file names
+# that are duplicates of the file identified by the key.
 duplicates_hash = Hash.new
-filesize_hash.values.each do |files_of_same_size|
-  if files_of_same_size.size > 1
-
-    duplicate_file_sets = duplicate_file_finder.find_duplicate_files_by_digest(files_of_same_size)
-
-    # Create a new hash that the key is the "original" file name. The values of the hash are arrays of file names
-    # that are duplicates of the file identified by the key.
-    duplicate_file_sets.each do |duplicate_files|
-      duplicate_files.sort! do |x, y|
-        compare_files(x, y)
-      end
-      duplicates_hash[duplicate_files.shift] = duplicate_files
-    end
+duplicate_file_sets.each do |duplicate_files|
+  duplicate_files.sort! do |x, y|
+    compare_files(x, y)
   end
+  duplicates_hash[duplicate_files.shift] = duplicate_files
 end
 
 bash_script = File.new SCRIPT_NAME, 'w'

@@ -54,4 +54,6 @@ class DuplicateFileFinder
     duplicate_file_sets
   end
 
+  private :index_file_size_in_dir, :find_duplicate_files_by_digest
+
 end
