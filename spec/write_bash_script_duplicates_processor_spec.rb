@@ -6,7 +6,6 @@ def capture_stdout(new_stdout)
   $stdout = new_stdout
   yield
   new_stdout
-
 ensure
   $stdout = previous_stdout
 end

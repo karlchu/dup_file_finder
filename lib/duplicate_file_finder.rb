@@ -17,6 +17,22 @@ class DuplicateFileFinder
     duplicate_file_set
   end
 
+  # Create a hash that the key is the "original" file name. The values of the hash are arrays of file names
+  # that are duplicates of the file identified by the key.
+  # @return [Hash]
+  # @param [Array] duplicate_file_sets An array of arrays. Each array contains the filenames of the files
+  # that are the duplicate of each other
+  def find_originals_in_duplicate_file_sets(duplicate_file_sets)
+    duplicates_hash = Hash.new
+    duplicate_file_sets.each do |duplicate_files|
+      duplicate_files.sort! do |x, y|
+        compare_files(x, y)
+      end
+      duplicates_hash[duplicate_files.shift] = duplicate_files
+    end
+    duplicates_hash
+  end
+
   # @return [Hash] A hash keyed by the file size. The value is an array of file names
   # that have that file size
   def index_file_size_in_dir(dir_glob_pattern)
@@ -54,6 +70,12 @@ class DuplicateFileFinder
     duplicate_file_sets
   end
 
-  private :index_file_size_in_dir, :find_duplicate_files_by_digest
+  def compare_files(x, y)
+    File.basename(x).length - File.basename(y).length
+  end
+
+  private :index_file_size_in_dir,
+          :find_duplicate_files_by_digest,
+          :compare_files
 
 end
