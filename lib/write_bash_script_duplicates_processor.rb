@@ -5,25 +5,32 @@ class WriteBashScriptDuplicatesProcessor
     @destination_dir = destination_dir
   end
 
+  # Writes the bash script to move the duplicates to $stdout.
+  # Other messages are written out to $stderr.
   # @param [Hash] duplicates_hash Hash of arrays
-  # @return [String] the content of a bash script that will move the duplicates
   def process_duplicates(duplicates_hash)
-    bash_script = String.new
 
-    bash_script << "#!/bin/bash\n\n"
+    $stdout.puts '#!/bin/bash'
+    $stdout.puts ''
+
     duplicates_hash.each do |file_to_keep, files_to_move|
-      puts "Duplicates of #{file_to_keep}:"
-      files_to_move.each { |file| puts "    #{file}" }
-
-      bash_script << "# Duplicates of #{file_to_keep}\n"
+      $stdout.puts "# Duplicates of #{file_to_keep}"
       files_to_move.each do |file|
         sub_path = file[@source_dir.length+1..-1]
         dest_file_path = "#{@destination_dir}#{File::SEPARATOR}#{sub_path}"
-        bash_script << "mv \"#{file}\" \"#{dest_file_path}\"\n"
+        $stdout.puts create_parent_directories_command(dest_file_path)
+        $stdout.puts "mv '#{file}' '#{dest_file_path}'"
       end
-      bash_script << "\n"
+      $stdout.puts "\n"
     end
-    bash_script
   end
+
+  def create_parent_directories_command(file_path)
+    path_elements = File::split(file_path)
+    path_elements.pop
+    "mkdir -p '#{File::join(path_elements)}'"
+  end
+
+  private :create_parent_directories_command
 
 end

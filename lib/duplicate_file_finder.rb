@@ -37,9 +37,9 @@ class DuplicateFileFinder
     content_hashes = Hash.new { |hash, key| hash[key] = [] }
 
     filenames.each do |filename|
-      printf "Computing the MD5 digest for file \"#{filename}\": "
+      $stderr.printf "### Computing the MD5 digest for file \"#{filename}\": "
       file_content_digest = Digest::MD5.file(filename).hexdigest
-      puts "[#{file_content_digest}]"
+      $stderr.puts "[#{file_content_digest}]"
       content_hashes[file_content_digest] << filename
     end
 

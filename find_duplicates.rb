@@ -6,11 +6,8 @@ require_relative 'lib/write_bash_script_duplicates_processor'
 FOLDER_TO_CHECK = 'test_data'
 # TODO: Take in the TO_FOLDER by command line parameter
 TO_FOLDER = 'test_data_duplicates'
-# TODO: Take in the SCRIPT_NAME by command line parameter
-SCRIPT_NAME = 'do-the-move.sh'
 
 # TODO: Make this cross-platform? (i.e. care a bit more about Windows?)
-
 
 duplicate_file_sets = DuplicateFileFinder.new.find_duplicate_file_sets(FOLDER_TO_CHECK)
 
@@ -28,8 +25,7 @@ duplicate_file_sets.each do |duplicate_files|
   duplicates_hash[duplicate_files.shift] = duplicate_files
 end
 
-bash_script = File.new SCRIPT_NAME, 'w'
-
 write_bash_script_duplicates_processor = WriteBashScriptDuplicatesProcessor.new(FOLDER_TO_CHECK, TO_FOLDER)
-bash_script.write write_bash_script_duplicates_processor.process_duplicates(duplicates_hash)
+write_bash_script_duplicates_processor.process_duplicates(duplicates_hash)
+
 
