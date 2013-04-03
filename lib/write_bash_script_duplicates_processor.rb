@@ -19,7 +19,7 @@ class WriteBashScriptDuplicatesProcessor
         sub_path = file[@source_dir.length+1..-1]
         dest_file_path = "#{@destination_dir}#{File::SEPARATOR}#{sub_path}"
         $stdout.puts create_parent_directories_command(dest_file_path)
-        $stdout.puts "mv '#{file}' '#{dest_file_path}'"
+        $stdout.puts %!mv "#{escape_double_quotes(file)}" "#{escape_double_quotes(dest_file_path)}"!
       end
       $stdout.puts "\n"
     end
@@ -28,9 +28,14 @@ class WriteBashScriptDuplicatesProcessor
   def create_parent_directories_command(file_path)
     path_elements = File::split(file_path)
     path_elements.pop
-    "mkdir -p '#{File::join(path_elements)}'"
+    %!mkdir -p "#{escape_double_quotes(File::join(path_elements))}"!
+  end
+
+  def escape_double_quotes(file)
+    file.gsub('""', %[\"])
   end
 
   private :create_parent_directories_command
+          :escape_double_quotes
 
 end

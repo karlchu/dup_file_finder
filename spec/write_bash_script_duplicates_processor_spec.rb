@@ -19,8 +19,8 @@ describe WriteBashScriptDuplicatesProcessor do
 #!/bin/bash
 
 # Duplicates of src/path/file1.bin
-mkdir -p 'dest/path'
-mv 'src/path/file1-copy.bin' 'dest/path/file1-copy.bin'
+mkdir -p "dest/path"
+mv "src/path/file1-copy.bin" "dest/path/file1-copy.bin"
 
 EOS
 
@@ -39,10 +39,10 @@ EOS
 #!/bin/bash
 
 # Duplicates of src/path/file1.bin
-mkdir -p 'dest/path'
-mv 'src/path/file1-copy.bin' 'dest/path/file1-copy.bin'
-mkdir -p 'dest/path'
-mv 'src/path/file1-dup.bin' 'dest/path/file1-dup.bin'
+mkdir -p "dest/path"
+mv "src/path/file1-copy.bin" "dest/path/file1-copy.bin"
+mkdir -p "dest/path"
+mv "src/path/file1-dup.bin" "dest/path/file1-dup.bin"
 
 EOS
 
@@ -61,12 +61,12 @@ EOS
 #!/bin/bash
 
 # Duplicates of src/path/file1.bin
-mkdir -p 'dest/path'
-mv 'src/path/file1-copy.bin' 'dest/path/file1-copy.bin'
+mkdir -p "dest/path"
+mv "src/path/file1-copy.bin" "dest/path/file1-copy.bin"
 
 # Duplicates of src/path/file2.bin
-mkdir -p 'dest/path'
-mv 'src/path/file2-copy.bin' 'dest/path/file2-copy.bin'
+mkdir -p "dest/path"
+mv "src/path/file2-copy.bin" "dest/path/file2-copy.bin"
 
 EOS
 
@@ -77,6 +77,26 @@ EOS
     string_io = StringIO.new
     capture_stdout(string_io) do
       processor.process_duplicates(duplicates_hash)
+    end
+
+    string_io.string.should == expected_script_content
+  end
+
+  it 'should escape double quote in filename' do
+    processor = WriteBashScriptDuplicatesProcessor.new('src', 'dest')
+
+    expected_script_content = <<EOS
+#!/bin/bash
+
+# Duplicates of src/a "funny" path/Karl's file.bin
+mkdir -p "dest/a \"funny\" path"
+mv "src/a \"funny\" path/Karl's file copy.bin" "dest/a \"funny\" path/Karl's file copy.bin"
+
+EOS
+
+    string_io = StringIO.new
+    capture_stdout(string_io) do
+      processor.process_duplicates %!src/a "funny" path/Karl's file.bin! => [%!src/a "funny" path/Karl's file copy.bin!]
     end
 
     string_io.string.should == expected_script_content

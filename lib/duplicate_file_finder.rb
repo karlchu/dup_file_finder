@@ -71,11 +71,47 @@ class DuplicateFileFinder
   end
 
   def compare_files(x, y)
-    File.basename(x).length - File.basename(y).length
+    x_path = File.dirname x
+    y_path = File.dirname y
+    x_filename = File.basename x
+    y_filename = File.basename y
+
+    if x_path == y_path
+      return compare_filenames x_filename, y_filename
+    end
+
+    x_is_original = is_original_dir(x_path)
+    y_is_original = is_original_dir(y_path)
+
+    return -1 if x_is_original && !y_is_original
+    return  1 if y_is_original && !x_is_original
+
+    return -1 if y_path.start_with?(x_path)
+    return  1 if x_path.start_with?(y_path)
+
+    return x_path <=> y_path
+  end
+
+  def is_original_dir(dir)
+    ['Original', '.picasaoriginal'].include? File.basename(dir)
+  end
+
+  def compare_filenames(x_filename, y_filename)
+    x_basename = File.basename x_filename, '.*'
+    y_basename = File.basename y_filename, '.*'
+
+    x_basename.length - y_basename.length
+
+    # MVI
+    # IMG
+    # DSC
+    #
+    #/-\d+$/.match File.basename(x, '.*')
   end
 
   private :index_file_size_in_dir,
           :find_duplicate_files_by_digest,
           :compare_files
+          :compare_filenames
 
 end
