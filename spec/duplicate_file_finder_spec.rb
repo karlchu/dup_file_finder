@@ -58,4 +58,12 @@ describe DuplicateFileFinder do
     result = duplicate_file_finder.find_originals_in_duplicate_file_sets(duplicate_file_sets)
     result.has_key?('whatever/.picasaoriginal/IMG_1234.JPG').should == true
   end
+
+  it 'should correctly identify file names that looks like an original file' do
+    'MVI_1234-1.JPG'.looks_like_original_file_name?.should == false
+    'MVI_1234.AVI'.looks_like_original_file_name?.should == true
+    'IMG_1234.JPG'.looks_like_original_file_name?.should == true
+    'CRW_1234.CRW'.looks_like_original_file_name?.should == true
+    'DSC01234.JPG'.looks_like_original_file_name?.should == true
+  end
 end

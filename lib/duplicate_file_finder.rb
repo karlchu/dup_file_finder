@@ -1,11 +1,26 @@
 require 'digest/md5'
 
+class ::String
+  def looks_like_original_file_name?
+    basename_regex = [
+        /MVI_\d{4}$/,
+        /IMG_\d{4}$/,
+        /CRW_\d{4}$/,
+        /DSC\d{5}$/,
+    ]
+
+    basename_regex.any? do |regex|
+      File.basename(self, '.*').match regex
+    end
+  end
+end
+
 class DuplicateFileFinder
 
   # @return [Array] An array of arrays. Each array contains the filenames of the files
   # that are the duplicate of each other
   def find_duplicate_file_sets(folder_to_check)
-    filesize_hash = index_file_size_in_dir("#{folder_to_check}/**/*")
+    filesize_hash = index_file_size_in_dir(folder_to_check)
 
     duplicate_file_set = []
     filesize_hash.values.each do |files_of_same_size|
@@ -35,7 +50,8 @@ class DuplicateFileFinder
 
   # @return [Hash] A hash keyed by the file size. The value is an array of file names
   # that have that file size
-  def index_file_size_in_dir(dir_glob_pattern)
+  def index_file_size_in_dir(folder_to_check)
+    dir_glob_pattern = "#{folder_to_check}/**/*"
     filesize_hashes = Hash.new { |hash, key| hash[key] = [] }
     Dir.glob(dir_glob_pattern, File::FNM_CASEFOLD) do |filename|
       next unless File.file?(filename)
@@ -100,13 +116,10 @@ class DuplicateFileFinder
     x_basename = File.basename x_filename, '.*'
     y_basename = File.basename y_filename, '.*'
 
-    x_basename.length - y_basename.length
+    return -1 if x_filename.looks_like_original_file_name? && !y_filename.looks_like_original_file_name?
+    return  1 if y_filename.looks_like_original_file_name? && !x_filename.looks_like_original_file_name?
 
-    # MVI
-    # IMG
-    # DSC
-    #
-    #/-\d+$/.match File.basename(x, '.*')
+    x_basename.length - y_basename.length
   end
 
   private :index_file_size_in_dir,
