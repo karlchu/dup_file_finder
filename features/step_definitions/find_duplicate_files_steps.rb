@@ -6,7 +6,9 @@ After do |scenario|
 end
 
 Given /^the following files in the directory '([^']+)'$/ do |dir_name, table|
-  @test_dir = dir_name
+  @test_dirs = [] if @test_dirs == nil
+  @test_dirs << dir_name
+
   @test_file_helper = TestFileHelper.new
   table.hashes.each do |hash|
     @test_file_helper.create_test_file dir_name, hash
@@ -14,7 +16,7 @@ Given /^the following files in the directory '([^']+)'$/ do |dir_name, table|
 end
 
 When /^I execute the duplicate file finder$/ do
-  @duplicate_file_sets = DuplicateFileFinder.new.find_duplicate_file_sets(@test_dir)
+  @duplicate_file_sets = DuplicateFileFinder.new(FileInfo.new).find_duplicate_file_sets(@test_dirs)
 end
 
 Then /^I should get empty result$/ do
@@ -28,7 +30,7 @@ end
 
 Then /^file\-set (\d+) should contain the following$/ do |file_set_num, table|
   file_set_index = Integer(file_set_num) - 1
-  expected_file_set = table.raw.map { |row| "#{@test_dir}/#{row[0]}" }
+  expected_file_set = table.raw.map { |row| "#{row[0]}" }
   @duplicate_file_sets[file_set_index].should =~ expected_file_set
 end
 
@@ -37,7 +39,7 @@ Then /^the file-sets should be as follows$/ do |table|
   table.raw.each do |row|
     catch (:done) do
       @duplicate_file_sets.each do |file_set|
-        throw :done if ( file_set.sort! == row.map { |cell| "#{@test_dir}/#{cell}" }.sort! )
+        throw :done if ( file_set.sort! == row.sort! )
       end
       fail 'Expected file set not found: ' + row.to_s
     end

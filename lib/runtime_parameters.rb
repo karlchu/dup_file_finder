@@ -12,11 +12,11 @@ class RuntimeParameters
 
     opts.parse!(args)
 
-    @options.input_folder = args[0] if (args.size > 0)
+    @options.input_folders = args
 
     @help_message = opts.to_s
 
-    if @options.destination == nil || @options.input_folder == nil
+    if @options.destination == nil || @options.input_folders.empty?
       @options.show_help = true
     end
   end
@@ -41,7 +41,7 @@ class RuntimeParameters
 
   def valid?
     return false if @options.destination == nil
-    return false if @options.input_folder == nil
+    return false if @options.input_folders.empty?
     true
   end
 
@@ -53,8 +53,8 @@ class RuntimeParameters
     @options.destination
   end
 
-  def input_folder
-    @options.input_folder
+  def input_folders
+    @options.input_folders
   end
 
 

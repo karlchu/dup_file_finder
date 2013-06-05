@@ -12,15 +12,15 @@ if runtime_parameters.show_help?
   exit 1
 end
 
-folder_to_check = runtime_parameters.input_folder
+folders_to_check = runtime_parameters.input_folders
 to_folder = runtime_parameters.destination
 
 duplicate_file_finder = DuplicateFileFinder.new
-duplicate_file_sets = duplicate_file_finder.find_duplicate_file_sets(folder_to_check)
+duplicate_file_sets = duplicate_file_finder.find_duplicate_file_sets(folders_to_check)
 
 duplicates_hash = duplicate_file_finder.find_originals_in_duplicate_file_sets(duplicate_file_sets)
 
-write_bash_script_duplicates_processor = WriteBashScriptDuplicatesProcessor.new(folder_to_check, to_folder)
+write_bash_script_duplicates_processor = WriteBashScriptDuplicatesProcessor.new(folders_to_check, to_folder)
 write_bash_script_duplicates_processor.process_duplicates(duplicates_hash)
 
 

@@ -101,4 +101,5 @@ EOS
 
     string_io.string.should == expected_script_content
   end
+
 end

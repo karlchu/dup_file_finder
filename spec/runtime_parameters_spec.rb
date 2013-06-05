@@ -44,7 +44,7 @@ describe RuntimeParameters do
 
     runtime_parameters.parse %w(-d abc path/to/input/folder)
 
-    runtime_parameters.input_folder.should == 'path/to/input/folder'
+    runtime_parameters.input_folders.should == ['path/to/input/folder']
   end
 
   it 'should be valid when required info are given' do

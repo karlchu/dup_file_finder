@@ -1,4 +1,5 @@
 require 'digest/md5'
+require_relative '../lib/file_info'
 
 class ::String
   def looks_like_original_file_name?
@@ -17,10 +18,16 @@ end
 
 class DuplicateFileFinder
 
+  # @param [FileInfo] file_info
+  def initialize(file_info)
+    @file_info = file_info
+  end
+
   # @return [Array] An array of arrays. Each array contains the filenames of the files
   # that are the duplicate of each other
-  def find_duplicate_file_sets(folder_to_check)
-    filesize_hash = index_file_size_in_dir(folder_to_check)
+  # @param [Array] folders_to_check An array of folders to check for duplicates
+  def find_duplicate_file_sets(folders_to_check)
+    filesize_hash = index_file_size_in_dir(folders_to_check)
 
     duplicate_file_set = []
     filesize_hash.values.each do |files_of_same_size|
@@ -50,15 +57,20 @@ class DuplicateFileFinder
 
   # @return [Hash] A hash keyed by the file size. The value is an array of file names
   # that have that file size
-  def index_file_size_in_dir(folder_to_check)
-    dir_glob_pattern = "#{folder_to_check}/**/*"
+  # @param [Array] folders_to_check An array of folders for which to index the file size.
+  def index_file_size_in_dir(folders_to_check)
     filesize_hashes = Hash.new { |hash, key| hash[key] = [] }
-    Dir.glob(dir_glob_pattern, File::FNM_CASEFOLD) do |filename|
-      next unless File.file?(filename)
 
-      file_size = File.size(filename)
-      filesize_hashes[file_size] << filename
+    folders_to_check.each do |folder_to_check|
+      dir_glob_pattern = "#{folder_to_check}/**/*"
+      @file_info.dir_glob(dir_glob_pattern) do |filename|
+        next unless @file_info.file?(filename)
+
+        file_size = @file_info.size(filename)
+        filesize_hashes[file_size] << filename
+      end
     end
+
     filesize_hashes
   end
 
@@ -70,7 +82,7 @@ class DuplicateFileFinder
 
     filenames.each do |filename|
       $stderr.printf "### Computing the MD5 digest for file \"#{filename}\": "
-      file_content_digest = Digest::MD5.file(filename).hexdigest
+      file_content_digest = @file_info.content_hash(filename)
       $stderr.puts "[#{file_content_digest}]"
       content_hashes[file_content_digest] << filename
     end

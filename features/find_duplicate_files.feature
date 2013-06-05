@@ -17,4 +17,16 @@ Feature: Find duplicate files
     When I execute the duplicate file finder
     Then the result set should contain 1 file-set
     And the file-sets should be as follows
-      | file1.bin | file1-copy.bin |
+      | test_data/duplicate_files/file1.bin | test_data/duplicate_files/file1-copy.bin |
+
+  Scenario: Multiple source folders
+    Given the following files in the directory 'test_data/dir1'
+      | file_sub_path | content_type | file_size |
+      | file1.bin     | zeros        | 1000      |
+    And the following files in the directory 'test_data/dir2'
+      | file_sub_path | content_type | file_size |
+      | file1.bin     | zeros        | 1000      |
+    When I execute the duplicate file finder
+    Then the result set should contain 1 file-sets
+    And the file-sets should be as follows
+      | test_data/dir1/file1.bin | test_data/dir2/file1.bin |
