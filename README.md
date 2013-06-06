@@ -6,5 +6,4 @@ a bash script to move them to a different directory.
 
 TODO:
 
-* Scan multiple directories
-* Take source and destination as command line options
+* Scan multiple directories (in progress)
