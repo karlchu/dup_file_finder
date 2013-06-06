@@ -35,9 +35,7 @@ class DuplicateFileFinder
     duplicates_hash = Hash.new
     duplicate_file_sets.each do |duplicate_files|
       original_and_duplicates = @original_finder.find_original(duplicate_files)
-      original = original_and_duplicates.original
-      duplicates = original_and_duplicates.duplicates
-      duplicates_hash[original] = duplicates
+      duplicates_hash[original_and_duplicates.original] = original_and_duplicates.duplicates
     end
     duplicates_hash
   end
