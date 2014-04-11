@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'digest/md5'
 require 'optparse'
 require_relative 'lib/duplicate_file_finder'
