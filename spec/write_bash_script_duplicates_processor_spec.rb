@@ -13,7 +13,7 @@ end
 describe WriteBashScriptDuplicatesProcessor do
 
   it 'should generate bash script with one duplicate file' do
-    processor = WriteBashScriptDuplicatesProcessor.new('src', 'dest')
+    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -33,7 +33,7 @@ EOS
   end
 
   it 'should generate bash script with more than one duplicate file' do
-    processor = WriteBashScriptDuplicatesProcessor.new('src', 'dest')
+    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -55,7 +55,7 @@ EOS
   end
 
   it 'should generate bash script with multiple file sets' do
-    processor = WriteBashScriptDuplicatesProcessor.new('src', 'dest')
+    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -83,7 +83,7 @@ EOS
   end
 
   it 'should escape double quote in filename' do
-    processor = WriteBashScriptDuplicatesProcessor.new('src', 'dest')
+    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash

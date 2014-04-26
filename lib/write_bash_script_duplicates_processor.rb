@@ -16,10 +16,11 @@ class WriteBashScriptDuplicatesProcessor
     duplicates_hash.each do |file_to_keep, files_to_move|
       $stdout.puts "# Duplicates of #{file_to_keep}"
       files_to_move.each do |file|
-        sub_path = file[@source_dir.length+1..-1]
+        sub_path = file[@source_dir[0].length+1..-1]
         dest_file_path = "#{@destination_dir}#{File::SEPARATOR}#{sub_path}"
         $stdout.puts create_parent_directories_command(dest_file_path)
         $stdout.puts %!mv "#{escape_double_quotes(file)}" "#{escape_double_quotes(dest_file_path)}"!
+        #$stdout.puts %!rm -f "#{escape_double_quotes(file)}"!
       end
       $stdout.puts "\n"
     end
