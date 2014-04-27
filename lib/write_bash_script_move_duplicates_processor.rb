@@ -1,4 +1,4 @@
-require_relative 'write_bash_script_duplicates_processor.rb')
+require_relative 'write_bash_script_duplicates_processor.rb'
 
 class WriteBashScriptMoveDuplicatesProcessor < WriteBashScriptDuplicatesProcessor
 
@@ -12,7 +12,6 @@ class WriteBashScriptMoveDuplicatesProcessor < WriteBashScriptDuplicatesProcesso
     dest_file_path = "#{@destination_dir}#{File::SEPARATOR}#{sub_path}"
     write_script_line create_parent_directories_command(dest_file_path)
     write_script_line %!mv "#{escape_double_quotes(file)}" "#{escape_double_quotes(dest_file_path)}"!
-    #$stdout.puts %!rm -f "#{escape_double_quotes(file)}"!
   end
 
   private

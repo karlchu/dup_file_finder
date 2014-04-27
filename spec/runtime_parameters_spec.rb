@@ -25,7 +25,7 @@ describe RuntimeParameters do
   end
 
   it 'should parse destination folder option when -d option given' do
-    runtime_parameters.parse %w(-M some/output/folder)
+    runtime_parameters.parse %w(-m some/output/folder)
 
     runtime_parameters.destination.should == 'some/output/folder'
   end
@@ -49,27 +49,27 @@ describe RuntimeParameters do
   end
 
   it 'should parse input folder' do
-    runtime_parameters.parse %w(-M abc path/to/input/folder)
+    runtime_parameters.parse %w(-m abc path/to/input/folder)
 
     runtime_parameters.input_folders.should == ['path/to/input/folder']
   end
 
   it 'should be valid when move destination is given' do
-    runtime_parameters.parse %w(-M abc path/to/input/folder)
+    runtime_parameters.parse %w(-m abc path/to/input/folder)
 
     runtime_parameters.valid?.should == true
     runtime_parameters.show_help?.should == false
   end
 
   it 'should be valid when delete short option is given' do
-    runtime_parameters.parse %w(-D path/to/input/folder)
+    runtime_parameters.parse %w(-d path/to/input/folder)
 
     runtime_parameters.valid?.should == true
     runtime_parameters.show_help?.should == false
   end
 
   it 'should be invalid and show help when no input folder given' do
-    runtime_parameters.parse %w(-M abc)
+    runtime_parameters.parse %w(-m abc)
 
     runtime_parameters.valid?.should == false
     runtime_parameters.show_help?.should == true

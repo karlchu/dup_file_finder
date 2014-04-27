@@ -3,6 +3,7 @@
 require 'digest/md5'
 require 'optparse'
 require_relative 'lib/duplicate_file_finder'
+require_relative 'lib/write_bash_script_delete_duplicates_processor'
 require_relative 'lib/write_bash_script_move_duplicates_processor'
 require_relative 'lib/runtime_parameters'
 
@@ -22,7 +23,9 @@ duplicate_file_sets = duplicate_file_finder.find_duplicate_file_sets(folders_to_
 
 duplicates_hash = duplicate_file_finder.find_originals_in_duplicate_file_sets(duplicate_file_sets)
 
-write_bash_script_duplicates_processor = WriteBashScriptMoveDuplicatesProcessor.new(folders_to_check, to_folder)
+write_bash_script_duplicates_processor = runtime_parameters.delete? ?
+    WriteBashScriptDeleteDuplicatesProcessor.new :
+    WriteBashScriptMoveDuplicatesProcessor.new(folders_to_check, to_folder)
 write_bash_script_duplicates_processor.process_duplicates(duplicates_hash)
 
 
