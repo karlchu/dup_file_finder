@@ -16,7 +16,7 @@ class RuntimeParameters
 
     @help_message = opts.to_s
 
-    if @options.destination == nil || @options.input_folders.empty?
+    if !valid?
       @options.show_help = true
     end
   end
@@ -30,6 +30,11 @@ class RuntimeParameters
         @options.destination = dir
       end
 
+      opts.on('-D', '--delete',
+              'Destination folder to which to move duplicate files') do
+        @options.delete = true
+      end
+
       opts.separator ""
       opts.separator "Common options:"
 
@@ -40,7 +45,7 @@ class RuntimeParameters
   end
 
   def valid?
-    return false if @options.destination == nil
+    return false if ( @options.destination == nil && @options.delete == nil)
     return false if @options.input_folders.empty?
     true
   end
@@ -57,5 +62,7 @@ class RuntimeParameters
     @options.input_folders
   end
 
-
+  def delete?
+    @options.delete
+  end
 end

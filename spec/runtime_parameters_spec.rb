@@ -36,6 +36,18 @@ describe RuntimeParameters do
     runtime_parameters.destination.should == 'some/output/folder'
   end
 
+  it 'should parse delete long option' do
+    runtime_parameters.parse %w(--delete some/output/folder)
+
+    runtime_parameters.delete?.should == true
+  end
+
+  it 'should parse delete short option' do
+    runtime_parameters.parse %w(--delete some/output/folder)
+
+    runtime_parameters.delete?.should == true
+  end
+
   it 'should parse input folder' do
     runtime_parameters.parse %w(-M abc path/to/input/folder)
 
@@ -44,6 +56,13 @@ describe RuntimeParameters do
 
   it 'should be valid when move destination is given' do
     runtime_parameters.parse %w(-M abc path/to/input/folder)
+
+    runtime_parameters.valid?.should == true
+    runtime_parameters.show_help?.should == false
+  end
+
+  it 'should be valid when delete short option is given' do
+    runtime_parameters.parse %w(-D path/to/input/folder)
 
     runtime_parameters.valid?.should == true
     runtime_parameters.show_help?.should == false
