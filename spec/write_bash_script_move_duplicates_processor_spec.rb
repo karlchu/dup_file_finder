@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../lib/write_bash_script_duplicates_processor'
+require_relative '../lib/write_bash_script_move_duplicates_processor'
 
 def capture_stdout(new_stdout)
   previous_stdout = $stdout
@@ -10,10 +10,10 @@ ensure
   $stdout = previous_stdout
 end
 
-describe WriteBashScriptDuplicatesProcessor do
+describe WriteBashScriptMoveDuplicatesProcessor do
 
   it 'should generate bash script with one duplicate file' do
-    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
+    processor = WriteBashScriptMoveDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -33,7 +33,7 @@ EOS
   end
 
   it 'should generate bash script with more than one duplicate file' do
-    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
+    processor = WriteBashScriptMoveDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -55,7 +55,7 @@ EOS
   end
 
   it 'should generate bash script with multiple file sets' do
-    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
+    processor = WriteBashScriptMoveDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
@@ -83,7 +83,7 @@ EOS
   end
 
   it 'should escape double quote in filename' do
-    processor = WriteBashScriptDuplicatesProcessor.new(['src'], 'dest')
+    processor = WriteBashScriptMoveDuplicatesProcessor.new(['src'], 'dest')
 
     expected_script_content = <<EOS
 #!/bin/bash
