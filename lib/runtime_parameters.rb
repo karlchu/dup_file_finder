@@ -25,7 +25,7 @@ class RuntimeParameters
     OptionParser.new do |opts|
       opts.banner = 'Usage: ruby find_duplicates.rb [options] folder_to_scan'
 
-      opts.on('-d', '--dest DESTINATION',
+      opts.on('-M', '--move-to DESTINATION',
               'Destination folder to which to move duplicate files') do |dir|
         @options.destination = dir
       end
