@@ -11,6 +11,7 @@ GEM
     gherkin (2.11.5)
       json (>= 1.4.6)
     json (1.7.6)
+    mini_exiftool (2.4.1)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -25,5 +26,6 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber
+  mini_exiftool
   rspec
   rspec-mocks

@@ -1,4 +1,5 @@
 require 'digest/md5'
+require 'mini_exiftool'
 
 class FileInfo
   def file?(filename)
@@ -16,6 +17,15 @@ class FileInfo
   def dir_glob(dir_glob_pattern)
     Dir.glob(dir_glob_pattern, File::FNM_CASEFOLD) do |filename|
       yield filename
+    end
+  end
+
+  def media_datetime(filename)
+    begin
+      media_info = MiniExiftool.new(filename)
+      return media_info['createdate']
+    rescue
+      return nil
     end
   end
 end
