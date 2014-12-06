@@ -11,7 +11,7 @@ class WriteBashScriptMoveDuplicatesProcessor < WriteBashScriptDuplicatesProcesso
     sub_path = file[@source_dir[0].length+1..-1]
     dest_file_path = "#{@destination_dir}#{File::SEPARATOR}#{sub_path}"
     write_script_line create_parent_directories_command(dest_file_path)
-    write_script_line %!mv "#{escape_double_quotes(file)}" "#{escape_double_quotes(dest_file_path)}"!
+    write_script_line %!mv "#{escape_quotes(file)}" "#{escape_quotes(dest_file_path)}"!
   end
 
   private
@@ -19,7 +19,7 @@ class WriteBashScriptMoveDuplicatesProcessor < WriteBashScriptDuplicatesProcesso
   def create_parent_directories_command(file_path)
     path_elements = File::split(file_path)
     path_elements.pop
-    %!mkdir -p "#{escape_double_quotes(File::join(path_elements))}"!
+    %!mkdir -p "#{escape_quotes(File::join(path_elements))}"!
   end
 
 end

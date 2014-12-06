@@ -6,12 +6,16 @@ class WriteBashScriptDuplicatesProcessor
   # @param [Hash] duplicates_hash Hash of arrays
   def process_duplicates(duplicates_hash)
     duplicates_hash.each do |file_to_keep, files_to_process|
-      write_script_line "# Duplicates of #{file_to_keep}"
+      write_original_file_comment(file_to_keep)
       files_to_process.each do |file|
         process_duplicate(file)
       end
       write_script_line "\n"
     end
+  end
+
+  def write_original_file_comment(file_to_keep)
+    write_script_line %Q{# Duplicates of #{escape_quotes(file_to_keep)}}
   end
 
   private
@@ -27,7 +31,7 @@ class WriteBashScriptDuplicatesProcessor
     @script_header_written = true
   end
 
-  def escape_double_quotes(file)
+  def escape_quotes(file)
     file.gsub('""', %[\"])
   end
 end
