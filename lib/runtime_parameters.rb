@@ -45,8 +45,9 @@ class RuntimeParameters
   end
 
   def valid?
-    return false if ( @options.destination == nil && @options.delete == nil)
+    return false if ( @options.destination.nil? && @options.delete.nil?)
     return false if @options.input_folders.empty?
+    return false if ( @options.destination && @options.input_folders.size > 1 )
     true
   end
 
