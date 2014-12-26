@@ -42,6 +42,7 @@ class OriginalFinder
         result_when_one_file_in_original_dir ||
         result_when_one_file_in_parent_folder_of_the_other_file ||
         result_when_one_file_in_properly_dated_folder ||
+        result_when_one_file_in_iphoto_library ||
         @x_dir <=> @y_dir
   end
 
@@ -91,8 +92,21 @@ class OriginalFinder
     return (comparison != 0) ? comparison : nil
   end
 
+  def result_when_one_file_in_iphoto_library
+    x_in_iphoto_dir = in_iphoto_dir?(@x_dir)
+    y_in_iphoto_dir = in_iphoto_dir?(@y_dir)
+
+    return -1 if y_in_iphoto_dir && !x_in_iphoto_dir
+    return  1 if x_in_iphoto_dir && !y_in_iphoto_dir
+    return nil
+  end
+
   def is_original_dir(dir)
     ['Original', '.picasaoriginal'].include? File.basename(dir)
+  end
+
+  def in_iphoto_dir?(dir)
+    !!(/\.photolibrary\// =~ dir)
   end
 
   def compare_filenames(x_filename, y_filename)

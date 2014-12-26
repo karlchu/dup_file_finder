@@ -67,6 +67,16 @@ describe OriginalFinder do
     result.duplicates.should =~ ['whatever/IMG_1234.JPG']
   end
 
+  it 'should identify iPhoto library path as non-original' do
+    original_finder = OriginalFinder.new
+    original = 'whatever/zzz/IMG_1234.JPG'
+    duplicate = 'whatever/iPhoto Library.photolibrary/Masters/2012/08/25/20120825-185837/IMG_1234.JPG'
+    result = original_finder.find_original([duplicate, original])
+
+    result.original.should == original
+    result.duplicates.should =~ [duplicate]
+  end
+
   #it 'should identify "IMG_1234_some_description.JPG" as original when compared to "IMG_1234.JPG"' do
   #  original_finder = OriginalFinder.new
   #  result = original_finder.find_original(['IMG_1234.JPG', 'IMG_1234_some_description.JPG'])
