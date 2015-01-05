@@ -133,6 +133,20 @@ describe OriginalFinder do
     result.duplicates.should =~ [duplicate_path]
   end
 
+  it 'should not explode when files are not in dated folders' do
+    original_finder = OriginalFinder.new
+    original = 'whatever/boom/IMG_1234.JPG'
+    duplicate = 'whatever/wham/IMG_1234.JPG'
+    media_datetime = Time.parse('2014-04-27 12:44:24 +1100')
+
+    file_info = Object.new
+    FileInfo.stub(:new).and_return(file_info)
+    file_info.stub(:media_datetime).with(original).and_return(media_datetime)
+    file_info.stub(:media_datetime).with(duplicate).and_return(media_datetime)
+
+    expect { original_finder.find_original([duplicate, original]) }.to_not raise_error
+  end
+
   it 'should correctly identify file names that looks like an original file' do
     'MVI_1234-1.JPG'.looks_like_original_file_name?.should == false
     'MVI_1234.AVI'.looks_like_original_file_name?.should == true

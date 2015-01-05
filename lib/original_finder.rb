@@ -85,8 +85,8 @@ class OriginalFinder
     return -1 if x_dir_date == media_date && y_dir_date.nil?
     return  1 if y_dir_date == media_date && x_dir_date.nil?
 
-    x_dir_date_diff = (media_date - x_dir_date).abs
-    y_dir_date_diff = (media_date - y_dir_date).abs
+    x_dir_date_diff = (media_date - x_dir_date).abs unless x_dir_date.nil?
+    y_dir_date_diff = (media_date - y_dir_date).abs unless y_dir_date.nil?
 
     comparison = x_dir_date_diff <=> y_dir_date_diff
     return (comparison != 0) ? comparison : nil
