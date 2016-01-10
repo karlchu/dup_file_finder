@@ -30,15 +30,17 @@ end
 
 
 describe DuplicateFileFinder do
+  let(:folder) { 'some_folder' }
+  let(:some_size) { 1000 }
+  let(:file_info) { FileInfo.new() }
+
+  before do
+    file_info.stub(:file?).and_return(true)
+    file_info.stub(:ignored?).and_return(false)
+  end
 
   it 'should find duplicates' do
-    folder = 'some_folder'
-    some_size = 1000
     some_hash = 'some_hash'
-
-    file_info = FileInfo.new()
-
-    file_info.stub(:file?).and_return(true)
 
     file_info.stub(:dir_glob).with("#{folder}/**/*")
     .and_yield('file1.bin')
@@ -57,12 +59,6 @@ describe DuplicateFileFinder do
   end
 
   it 'should not identify as duplicate if sizes are different' do
-    folder = 'some_folder'
-
-    file_info = FileInfo.new()
-
-    file_info.stub(:file?).and_return(true)
-
     file_info.stub(:dir_glob).with("#{folder}/**/*")
     .and_yield('file1.bin')
     .and_yield('file2.bin')
@@ -78,13 +74,6 @@ describe DuplicateFileFinder do
   end
 
   it 'should not identify as duplicate if sizes are same but contents are different' do
-    folder = 'some_folder'
-    some_size = 1000
-
-    file_info = FileInfo.new()
-
-    file_info.stub(:file?).and_return(true)
-
     file_info.stub(:dir_glob).with("#{folder}/**/*")
     .and_yield('file1.bin')
     .and_yield('file2.bin')
@@ -103,13 +92,6 @@ describe DuplicateFileFinder do
 
 
   it 'should identify multiple sets of duplicates' do
-    folder = 'some_folder'
-    some_size = 1000
-
-    file_info = FileInfo.new()
-
-    file_info.stub(:file?).and_return(true)
-
     file_info.stub(:dir_glob).with("#{folder}/**/*")
     .and_yield('file1.bin')
     .and_yield('file2.bin')
@@ -130,5 +112,23 @@ describe DuplicateFileFinder do
     duplicate_file_sets = duplicate_file_finder.find_duplicate_file_sets([folder])
 
     duplicate_file_sets.should equal_to_fileset [ ['file1.bin', 'file1copy.bin'], ['file2.bin', 'file2copy.bin']]
+  end
+
+  it 'should ignore ignored files' do
+    file_info.stub(:dir_glob).with("#{folder}/**/*")
+      .and_yield('file1.AAE')
+      .and_yield('file2.AAE')
+
+    file_info.stub(:size).with('file1.AAE').and_return(some_size)
+    file_info.stub(:size).with('file2.AAE').and_return(some_size)
+
+    file_info.stub(:ignored?).with('file1.AAE').and_return(true)
+    file_info.stub(:ignored?).with('file2.AAE').and_return(true)
+
+    duplicate_file_finder = DuplicateFileFinder.new(file_info)
+
+    duplicate_file_sets = duplicate_file_finder.find_duplicate_file_sets([folder])
+
+    duplicate_file_sets.count.should == 0
   end
 end

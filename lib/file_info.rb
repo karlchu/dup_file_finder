@@ -2,6 +2,10 @@ require 'digest/md5'
 require 'mini_exiftool'
 
 class FileInfo
+  def initialize
+    @ignore_pattern = Regexp.new('\.aae$', 'i')
+  end
+
   def file?(filename)
     File.file?(filename)
   end
@@ -27,5 +31,9 @@ class FileInfo
     rescue
       return nil
     end
+  end
+
+  def ignored?(filename)
+    @ignore_pattern.match(filename) ? true : false
   end
 end

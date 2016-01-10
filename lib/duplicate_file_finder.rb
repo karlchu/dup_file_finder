@@ -66,6 +66,7 @@ class DuplicateFileFinder
     content_hashes = Hash.new { |hash, key| hash[key] = [] }
 
     filenames.each do |filename|
+      next if @file_info.ignored?(filename)
       $stderr.printf "### Computing the MD5 digest for file \"#{filename}\": "
       file_content_digest = @file_info.content_hash(filename)
       $stderr.puts "[#{file_content_digest}]"
